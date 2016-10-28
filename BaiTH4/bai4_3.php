@@ -73,45 +73,62 @@
                 ?>
                 <?php
                     if( $_SERVER['REQUEST_METHOD'] == "POST" ){
-                        $so_a  = ( is_numeric( $_POST['so_a'] ) ) ? $_POST['so_a'] : 1;
-                        $so_b  = ( is_numeric( $_POST['so_b'] ) ) ? $_POST['so_b'] : 1;
+                        $error = array();
+                        if( isset( $_POST['so_a'] ) && $_POST['so_a'] == '' ){
+                            $error[] = 'Vui long nhap gia tri cho a';
+                        }
+                        if( isset( $_POST['so_b'] ) && $_POST['so_b'] == '' ){
+                            $error[] = 'Vui long nhap gia tri cho b';
+                        }
+                        if( !is_numeric( $_POST['so_a'] ) ){
+                            $error[] = 'Vui long nhap gia tri so cho a';
+                        }
+                        if( !is_numeric( $_POST['so_b'] ) ){
+                            $error[] = 'Vui long nhap gia tri so cho a';
+                        }
                         
-                        $tong = tong( $so_a, $so_b );
-                        $hieu = hieu( $so_a, $so_b );
-                        $tich = tich( $so_a, $so_b );
-                        $thuong = thuong( $so_a, $so_b );
-                        
-                        $args = array( $tong, $hieu, $tich, $thuong);
-                        ?>
-                        <div class="alert alert-danger" role="alert">
-                            <p>Tổng <?php echo $so_a . " + " . $so_b ." = " . $tong; ?></p>
-                            <p>Hiệu <?php echo $so_a . " - " . $so_b ." = " . $hieu; ?></p>
-                            <p>Tích <?php echo $so_a . " * " . $so_b ." = " . $tich; ?></p>
-                            <p>Thương <?php echo $so_a . " / " . $so_b ." = " . $thuong; ?></p>
-                            <p>Trung bình 4 phép toán <?php echo trung_binh( $args ); ?> </p>
+                        if( empty( $error ) ){
+                            $tong = tong( $so_a, $so_b );
+                            $hieu = hieu( $so_a, $so_b );
+                            $tich = tich( $so_a, $so_b );
+                            $thuong = thuong( $so_a, $so_b );
                             
-                            <?php
-                                if( kt_so_nguyen_to( $so_a ) ){
-                                    echo '<p>Số: '. $so_a .' là số nguyên tố</p>';
-                                }else{
-                                    echo '<p>Số: '. $so_a .' không phải là số nguyên tố</p>';
-                                }
-                                
+                            $args = array( $tong, $hieu, $tich, $thuong);
                             ?>
-                            
+                            <div class="alert alert-danger" role="alert">
+                                <p>Tổng <?php echo $so_a . " + " . $so_b ." = " . $tong; ?></p>
+                                <p>Hiệu <?php echo $so_a . " - " . $so_b ." = " . $hieu; ?></p>
+                                <p>Tích <?php echo $so_a . " * " . $so_b ." = " . $tich; ?></p>
+                                <p>Thương <?php echo $so_a . " / " . $so_b ." = " . $thuong; ?></p>
+                                <p>Trung bình 4 phép toán <?php echo trung_binh( $args ); ?> </p>
+                                
+                                <?php
+                                    if( kt_so_nguyen_to( $so_a ) ){
+                                        echo '<p>Số: '. $so_a .' là số nguyên tố</p>';
+                                    }else{
+                                        echo '<p>Số: '. $so_a .' không phải là số nguyên tố</p>';
+                                    }
+                                    
+                                ?>
+                                
+                                <?php
+                                    
+                                    echo '<p>Giai thừa: '. $so_b .'! = '. tinh_giai_thua( $so_b ) .'</p>';
+                                    
+                                ?>
+                                
+                            </div>
                             <?php
-                                
-                                echo '<p>Giai thừa: '. $so_b .'! = '. tinh_giai_thua( $so_b ) .'</p>';
-                                
-                            ?>
-                            
-                        </div>
-                        <?php
-                        
+                        }//empty error
                     }
                 ?>
-            
+                <?php if( !empty( $error ) ) : ?>
+                    <div class="alert alert-danger" role="alert">
+                        <p><?php echo implode( '<br/>', $error ); ?></p>
+                    </div>
+                <?php endif; ?>
                 <div class="login-panel panel panel-default">
+                    
                     <div class="panel-heading">
                         <h3 class="panel-title">Tính toán</h3>
                     </div>
